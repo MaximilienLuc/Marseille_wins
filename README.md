@@ -21,9 +21,47 @@ We (Oliver Smith and Maximilien Lucille) are Marseille fans. We've spent too man
 
 ## 🚀 Running the Streamlit Application
 
-Start the Streamlit web dashboard:
+Start the Streamlit interactive dashboard:
 ```bash
 streamlit run app/streamlit.py
+```
+
+### Dashboard Features:
+- **Dataset Overview**: Displays match statistics, Elo ratings, recent form, rest days, and match result distribution.
+- **Interactive Model Training & Evaluation**: Train an XGBoost Classifier with customizable hyperparameters (Test set size, Learning rate, N estimators, Max depth).
+- **Evaluation Metrics & Visualizations**: Displays Log Loss, Accuracy Score, Confusion Matrix, and Feature Importances.
+- **Sample Predictions**: Table showing predictions alongside `Home_team` and `Away_team` names.
+
+---
+
+## 🐳 Docker Deployment & Docker Hub
+
+### 1. Build the Docker Image
+```bash
+docker build -t marseille-wins .
+```
+
+### 2. Run the Container Locally
+```bash
+docker run -d -p 8501:8501 --name marseille-app marseille-wins
+```
+Access the application at `http://localhost:8501`.
+
+### 3. Push to Docker Hub
+```bash
+# Log in to Docker Hub
+docker login
+
+# Tag the image with your Docker Hub username
+docker tag marseille-wins mlucille/marseille-wins:latest
+
+# Push the image to Docker Hub
+docker push mlucille/marseille-wins:latest
+```
+
+### 4. Run directly from Docker Hub anywhere
+```bash
+docker run -p 8501:8501 mlucille/marseille-wins:latest
 ```
 
 ---
@@ -36,7 +74,7 @@ pytest tests/ --cov=app --cov-report=term-missing
 ```
 
 ### Test Coverage Highlights:
-- **`tests/test_data_processing.py`**: Tests data loading, Elo formulas (`expected_score`, `update_elo`), rolling form calculation (`features`), rest days integration (`get_rest_days`), and result ordinal encoding (`get_features`).
+- **`tests/test_data_processing.py`**: Tests data loading, Elo calculations (`expected_score`, `update_elo`), rolling form calculations (`features`), rest days integration (`get_rest_days`), and result ordinal encoding (`get_features`).
 - **`tests/test_model_pipeline.py`**: Tests non-shuffled time-series train/test splitting (`split_train_test`), model fitting (`fit_model`), metric evaluation (`evaluate`), and deterministic predictions (`predict`).
 
 ---
